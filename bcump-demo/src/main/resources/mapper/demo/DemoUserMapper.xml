@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bcump.demo.mapper.DemoUserMapper">
+    <resultMap id="userMap" type="com.bcump.demo.domain.DemoUser">
+        <result column="del_flag" property="delFlag"/>
+    </resultMap>
+
+    <select id="findAll" resultMap = "userMap">
+        select * from demo_user
+    </select>
+
+    <select id="checkNumberUnique" resultMap = "userMap">
+        select * from demo_user where number =  #{number} and del_flag = '0'
+    </select>
+
+    <insert id="add">
+        insert into demo_user(id, name, age, number, password, del_flag) values(#{id}, #{name}, #{age}, #{number}, #{password}, #{delFlag})
+    </insert>
+
+    <update id="updateUser">
+        update demo_user set name = #{name}, age = #{age}, number = #{number}, del_flag = #{delFlag}
+        where id = #{id}
+    </update>
+
+    <select id="findVersionByUserId" resultType="Long">
+        select version from demo_user where id = #{userId}
+    </select>
+
+
+    <delete id="deleteUserById" parameterType="Long">
+        update demo_user set del_flag = '2' where id = #{id}
+    </delete>
+
+    <select id="selectUserList" parameterType="DemoUser" resultMap="userMap">
+        select id, name, age, number, del_flag from demo_user where del_flag = '0'
+        <if test="id != null and id != 0">
+            AND id = #{id}
+        </if>
+        <if test="name != null and name != ''">
+            AND name like concat('%', #{name}, '%')
+        </if>
+        <if test="age != null and age != 0">
+            AND age = #{age}
+        </if>
+        <if test="number != null and number != ''">
+            AND number like concat('%', #{number}, '%')
+        </if>
+    </select>
+
+
+
+</mapper>

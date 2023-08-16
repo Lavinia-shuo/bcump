@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bcump.demo.mapper.DemoPostMapper">
+    <resultMap id="postMap" type="com.bcump.demo.domain.DemoPost">
+        <id column="post_id" property="postId" />
+        <result column="post_name" property="postName"/>
+    </resultMap>
+
+    <insert id="addPost">
+        insert into demo_post(post_id, post_name, version) values(#{postId}, #{postName}, #{version})
+    </insert>
+
+    <update id="updatePost">
+        update demo_post set post_id = #{postId}, post_name = #{postName}, version = #{version} + 1
+        where post_id = #{postId} and version = #{version}
+    </update>
+
+    <select id="selectPostById" resultMap = "postMap">
+        select post_id, post_name, version from demo_post where post_id = #{postId}
+    </select>
+
+    <delete id="deletePostById" parameterType="Long">
+        delete from demo_post where post_id = #{postId}
+    </delete>
+
+
+
+</mapper>
